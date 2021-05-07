@@ -1,8 +1,11 @@
 require 'open-uri'
 require 'json'
+require 'faker'
 
 puts "Cleaning up database..."
 Movie.destroy_all
+Bookmark.destroy_all
+List.destroy_all
 puts "Database cleaned"
 
 url = "http://tmdb.lewagon.com/movie/top_rated"
@@ -21,3 +24,23 @@ url = "http://tmdb.lewagon.com/movie/top_rated"
   end
 end
 puts "Movies created"
+
+10.times do
+  list = List.new(
+    name: Faker::Games::Pokemon.name
+  )
+  if list.valid?
+    list.save!
+  end
+end
+
+(1..3).to_a.sample.times do
+    bookmark = Bookmark.new(
+      comment: Faker::Games::Pokemon.move,
+      list: List.last,
+      movie: Movie.all.sample
+    )
+    if bookmark.valid?
+      bookmark.save!
+    end
+  end
